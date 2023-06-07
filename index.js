@@ -29,6 +29,7 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         client.connect();
         const classesCollection = client.db('classesData').collection('class');
+        const instructorsCollection = client.db('classesData').collection('instructor');
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
@@ -43,8 +44,16 @@ async function run() {
         //     res.send(result);
 
         // })
+        // allClasses api 
         app.get('/allClasses', async (req, res) => {
             const result = await classesCollection.find({}).toArray();
+            res.send(result);
+
+        })
+
+        //instructors api
+        app.get('/allinstructors', async (req, res) => {
+            const result = await instructorsCollection.find({}).toArray();
             res.send(result);
 
         })
