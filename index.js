@@ -45,6 +45,17 @@ async function run() {
             res.send(result);
 
         })
+        //get booking class by email
+        app.get('/bookingClass', async (req, res) => {
+            const email = req.query.email;
+            if (!email) {
+                res.send([]);
+            }
+            const query = { email: email };
+            const result = await usersSelectedCollection.find(query).toArray();
+            res.send(result);
+        })
+
         // allClasses api 
         app.get('/allClasses', async (req, res) => {
             const result = await classesCollection.find({}).toArray();
