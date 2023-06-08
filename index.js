@@ -31,12 +31,18 @@ async function run() {
         const classesCollection = client.db('classesData').collection('class');
         const instructorsCollection = client.db('classesData').collection('instructor');
         const usersSelectedCollection = client.db('classesData').collection('bookingClass');
-
+        const usersCollection = client.db('classesData').collection('users');
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
+        //users api collection
+        app.post('/users', async (req, res) => {
+            const body = req.body;
+            const result = await usersCollection.insertOne(body);
+            res.send(result);
 
+        })
 
         //selected booking class
         app.post('/bookingClass', async (req, res) => {
