@@ -30,6 +30,7 @@ async function run() {
         client.connect();
         const classesCollection = client.db('classesData').collection('class');
         const instructorsCollection = client.db('classesData').collection('instructor');
+        const usersSelectedCollection = client.db('classesData').collection('bookingClass');
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
@@ -37,13 +38,13 @@ async function run() {
 
 
 
+        //selected booking class
+        app.post('/bookingClass', async (req, res) => {
+            const body = req.body;
+            const result = await usersSelectedCollection.insertOne(body);
+            res.send(result);
 
-        // app.post('/addToy', async (req, res) => {
-        //     const body = req.body;
-        //     const result = await toyCollection.insertOne(body);
-        //     res.send(result);
-
-        // })
+        })
         // allClasses api 
         app.get('/allClasses', async (req, res) => {
             const result = await classesCollection.find({}).toArray();
