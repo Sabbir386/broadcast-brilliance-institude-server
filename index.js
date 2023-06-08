@@ -39,15 +39,24 @@ async function run() {
         //users api collection
         app.post('/users', async (req, res) => {
             const body = req.body;
+            const existingUser = await usersCollection.findOne(query);
+
+            if (existingUser) {
+                return res.send({ message: 'user already exists database' })
+            }
             const result = await usersCollection.insertOne(body);
             res.send(result);
 
+        })
+        app.get('/users', async (req, res) => {
+            const result = await usersCollection.find({}).toArray();
+            res.send(result);
         })
 
         //selected booking class
         app.post('/bookingClass', async (req, res) => {
             const body = req.body;
-            const result = await usersSelectedCollection.insertOne(body);
+            const result = await usersCollection.insertOne(body);
             res.send(result);
 
         })
