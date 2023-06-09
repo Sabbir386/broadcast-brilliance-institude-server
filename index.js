@@ -36,6 +36,20 @@ async function run() {
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
+
+        // allClasses api 
+        app.get('/allClasses', async (req, res) => {
+            const result = await classesCollection.find({}).toArray();
+            res.send(result);
+
+        })
+        app.post('/allClasses', async (req, res) => {
+            const body = req.body;
+            const result = await classesCollection.insertOne(body);
+            res.send(result);
+
+        })
+
         //users api collection
         app.post('/users', async (req, res) => {
             const body = req.body;
@@ -109,12 +123,7 @@ async function run() {
             res.send(result);
         })
 
-        // allClasses api 
-        app.get('/allClasses', async (req, res) => {
-            const result = await classesCollection.find({}).toArray();
-            res.send(result);
 
-        })
 
         //instructors api
         app.get('/allinstructors', async (req, res) => {
