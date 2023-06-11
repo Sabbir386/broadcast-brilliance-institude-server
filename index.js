@@ -64,6 +64,13 @@ async function run() {
             res.send(result);
 
         })
+        app.get('/allClasses/feedback/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await classesCollection.find(query).toArray();
+            res.send(result);
+
+        })
         app.post('/allClasses', async (req, res) => {
             const body = req.body;
             const result = await classesCollection.insertOne(body);
@@ -77,6 +84,18 @@ async function run() {
                 $set: {
                     status: 'Approved'
                 },
+            };
+
+            const result = await classesCollection.updateOne(filter, updateDoc);
+            res.send(result);
+
+        })
+        app.put('/allClasses/updatedFeedBack/:id', async (req, res) => {
+            const id = req.params.id;
+            const bodyData = req.body;
+            const filter = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: bodyData,
             };
 
             const result = await classesCollection.updateOne(filter, updateDoc);
