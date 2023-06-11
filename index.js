@@ -18,7 +18,6 @@ app.use(morgan('dev'));
 
 const verifyJWT = (req, res, next) => {
     const authorization = req.headers.authorization;
-    console.log(authorization);
     if (!authorization) {
         return res.status(401).send({ error: true, message: 'Unauthorized access' });
     }
@@ -127,6 +126,26 @@ async function run() {
             res.send(result);
 
         })
+        app.get('/allClasses/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { instructor_email: email }
+            const result = await classesCollection.find(query).toArray();
+            res.send(result);
+
+        })
+        // app.get('/users/instructor/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const filter = { _id: new ObjectId(id) };
+        //     const updateDoc = {
+        //         $set: {
+        //             role: 'instructor'
+        //         },
+        //     };
+
+        //     const result = await usersCollection.updateOne(filter, updateDoc);
+        //     res.send(result);
+
+        // })
 
         //selected booking class
         app.post('/bookingClass', async (req, res) => {
