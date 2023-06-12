@@ -8,6 +8,7 @@ const morgan = require('morgan');
 
 const cors = require('cors');
 const app = express();
+const stripe = require("stripe")(process.env.PAYMENT_SECRET_KEY);
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -177,19 +178,6 @@ async function run() {
             res.send(result);
 
         })
-        // app.get('/users/instructor/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const filter = { _id: new ObjectId(id) };
-        //     const updateDoc = {
-        //         $set: {
-        //             role: 'instructor'
-        //         },
-        //     };
-
-        //     const result = await usersCollection.updateOne(filter, updateDoc);
-        //     res.send(result);
-
-        // })
 
         //selected booking class
         app.post('/bookingClass', async (req, res) => {
@@ -222,12 +210,35 @@ async function run() {
             const result = await usersSelectedCollection.deleteOne(query);
             res.send(result);
         })
+        app.get('/bookingClass/payment/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await usersSelectedCollection.findOne(query);
+            res.send(result);
+        })
 
         //instructors api
         app.get('/allinstructors', async (req, res) => {
             const result = await instructorsCollection.find({}).toArray();
             res.send(result);
 
+        })
+
+        // payment api 
+        app.post('/create-payment-intent', async (req, res) => {
+            const { price } = req.body;
+            console.log(price)
+
+            const amount = parseInt(price * 100);
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount: amount,
+                currency: 'usd',
+                payment_method_types: ['card']
+            });
+
+            res.send({
+                clientSecret: paymentIntent.client_secret
+            })
         })
 
     } finally {
