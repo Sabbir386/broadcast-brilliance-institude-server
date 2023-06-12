@@ -54,6 +54,7 @@ async function run() {
         const instructorsCollection = client.db('classesData').collection('instructor');
         const usersSelectedCollection = client.db('classesData').collection('bookingClass');
         const usersCollection = client.db('classesData').collection('users');
+        const paymentCollection = client.db('classesData').collection('payment');
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -228,7 +229,6 @@ async function run() {
         app.post('/create-payment-intent', async (req, res) => {
             const { price } = req.body;
             console.log(price)
-
             const amount = parseInt(price * 100);
             const paymentIntent = await stripe.paymentIntents.create({
                 amount: amount,
@@ -240,6 +240,15 @@ async function run() {
                 clientSecret: paymentIntent.client_secret
             })
         })
+
+        app.post('/payment/transaction', async (req, res) => {
+            const body = req.body;
+            const result = await paymentCollection.insertOne(body);
+            res.send(result);
+
+        })
+
+
 
     } finally {
         // Ensures that the client will close when you finish/error
