@@ -224,6 +224,13 @@ async function run() {
             res.send(result);
 
         })
+        app.get('/allinstructors/serachbyemail/:email', async (req, res) => {
+            const email = req.params.email;
+            const filter = { instructor_email: email }
+            const result = await instructorsCollection.find(filter).toArray();
+            res.send(result);
+
+        })
 
         // payment api 
         app.post('/create-payment-intent', async (req, res) => {
